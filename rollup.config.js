@@ -6,7 +6,7 @@ import sveltePreprocess from "svelte-preprocess";
 export default {
     input: "frontend/index.js",
     output: {
-        file: "public/bundle.js",
+        file: "frontend/public/bundle.js",
         format: "iife",
     },
     plugins: [
