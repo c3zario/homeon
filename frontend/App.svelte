@@ -151,15 +151,18 @@
         margin: 5px;
         padding: 3px;
     }
+
     .calendar {
         position: relative;
         width: 100%;
         overflow: hidden;
     }
+
     .hours {
         float: left;
         width: 100px;
     }
+
     .day {
         border: 1px solid black;
         height: 99%;
@@ -169,24 +172,28 @@
         padding: 10px;
         position: relative;
     }
-    :global(.plan) {
+
+    .plan {
         background-color: aqua;
         position: absolute;
     }
+
     .week {
         display: flex;
     }
+
     .headerCalendar {
         width: 20vw;
         padding: 10px;
         margin: 2px;
         border: 1px solid black;
     }
+
     .headerCalendar:first-of-type {
-        border: 0px;
+        border: 0;
         min-width: 100px;
         max-width: 100px;
-        padding: 0px;
-        margin: 0px;
+        padding: 0;
+        margin: 0;
     }
 </style>
