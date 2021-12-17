@@ -26,7 +26,7 @@
     ];
     let hours = generateHours();
     let plans = [
-        ["2021-12-17", "12:54", "2021-12-19", "23:59", "nic nie robienie"],
+        ["2021-12-15", "12:54", "2021-12-15", "23:59", "nic nie robienie"],
         ["2021-12-13", "5:00", "2021-12-14", "10:00", "Też nic nie robienie"],
         ["2021-12-16", "4:00", "2021-12-16", "13:00", "bruh"],
     ];
@@ -47,7 +47,8 @@
     function EachWeek() {
         return plans.filter(
             (plan) =>
-                new Date(plan[0]) >= monday && new Date(plan[2]) <= nextMonday
+                //new Date(plan[0]) >= monday && new Date(plan[2]) <= nextMonday//monday <= plan[0] && nextMonday >= plan[0] || monday <= plan[0] && nextMonday >= plan[0] || monday >= plan[0] && nextMonday >= plan[2]
+                (new Date(plan[0]) >= monday && new Date(plan[0]) <= nextMonday) || (new Date(plan[2]) >= monday && new Date(plan[2]) <= nextMonday) || (new Date(plan[0]) <= monday && new Date(plan[2]) >= nextMonday)
         );
     }
     function ShowPlans(plans) {
@@ -56,9 +57,18 @@
             const end = new Date(endDate + " " + endTime);
             const h = document.querySelector(".hours").offsetHeight;
             const top = getHeight(start) * h;
-            let i = start.getDay() - 1;
+            let i = 0;            
             const current = new Date(start);
             const afterEnd = new Date(end);
+            if(start <= monday)
+            {
+                days[i].push({top: 0, bottom: 0, text});
+                current.setDate(monday.getDate() + 1);
+                i++;
+            }
+            else
+                i = start.getDay() - 1;
+                
             afterEnd.setDate(afterEnd.getDate() + 1);
             do {
                 days[i].push({
@@ -71,7 +81,7 @@
                 });
                 current.setDate(current.getDate() + 1);
                 i++;
-            } while (current.getDate() != afterEnd.getDate());
+            } while (current.getDate() != afterEnd.getDate() && i < 7);
             days = days;
         });
     }
