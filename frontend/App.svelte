@@ -1,5 +1,6 @@
 <script type="ts">
     import Calendar from "./Calendar.svelte";
+    import { Router, Link, Route } from "svelte-routing";
 
     let plans = [
         {
@@ -27,10 +28,30 @@
     let time = "20:54";
 </script>
 
-<h1>Hello world!</h1>
-<Calendar {plans} date={new Date()} />
-<input type="date" bind:value={date} />
-<input type="time" bind:value={time} />
+<Router>
+    <h1>Hello world!</h1>
+    <nav>
+        <ul>
+            <li>
+                <Link to="/">Kalendarz</Link>
+            </li>
+            <li>
+                <Link to="/test">Test</Link>
+            </li>
+        </ul>
+    </nav>
+    <Route path="/">
+        <Calendar {plans} date={new Date()} />
+        <input type="date" bind:value={date} />
+        <input type="time" bind:value={time} />
+    </Route>
+    <Route path="/test">
+        <h2>Test</h2>
+    </Route>
+    <Route>
+        <p>404 Not Found</p>
+    </Route>
+</Router>
 
 <style>
     :global(*, ::before, ::after) {
