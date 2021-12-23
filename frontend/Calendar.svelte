@@ -1,57 +1,60 @@
 <script type="ts">
     import DateText from "./DateText.svelte";
 
-    export let plans: {
+    export let plans: Plans;
+
+    type Plans = Plan[];
+
+    type Plan = {
         start: Date;
         end: Date;
         text: string;
-    }[];
+    };
+
     export let date: Date;
 
-    $: plansForThisWeek = plans.filter(
-        ({ start, end }) =>
-            (start >= monday && start <= nextMonday) ||
-            (end >= monday && end <= nextMonday) ||
-            (start <= monday && end >= nextMonday)
-    );
+    $: monday = getMonday(date);
+    $: nextMonday = addDays(monday, 7);
+    $: dayPlans = generateDayPlans(plans, monday, nextMonday);
 
-    const hours = generateHours();
-    const monday = getMonday(date);
-    const nextMonday = addDays(monday, 7);
+    function generateDayPlans(plans: Plans, weekBegin: Date, weekEnd: Date) {
+        const dayPlans: DayPlan[][] = Array.from({ length: 7 }, () => []);
+        for (const { start, end, text } of plans.filter(isThisWeek)) {
+            let i = start <= monday ? 0 : start.getDay() - 1;
+            let current: Date;
+            do {
+                current = addDays(monday, i);
+                dayPlans[i].push({
+                    top: isSameDate(current, start)
+                        ? getFractionOfDayPassed(start)
+                        : 0,
+                    bottom: isSameDate(current, end)
+                        ? 1 - getFractionOfDayPassed(end)
+                        : 0,
+                    text,
+                });
+                ++i;
+            } while (!isSameDate(current, end) && i < 7);
+        }
+        return dayPlans;
 
-    let days = Array.from({ length: 7 }, () => []);
+        function isThisWeek({ start, end }: Plan) {
+            return (
+                (start >= weekBegin && start <= weekEnd) ||
+                (end >= weekBegin && end <= weekEnd) ||
+                (start <= weekBegin && end >= weekEnd)
+            );
+        }
 
-    $: for (const { start, end, text } of plansForThisWeek) {
-        let i = start <= monday ? 0 : start.getDay() - 1;
-        let current: Date;
-        do {
-            current = addDays(monday, i);
-            days[i].push({
-                top: isSameDate(current, start)
-                    ? getFractionOfDayPassed(start)
-                    : 0,
-                bottom: isSameDate(current, end)
-                    ? 1 - getFractionOfDayPassed(end)
-                    : 0,
-                text,
-            });
-            ++i;
-        } while (!isSameDate(current, end) && i < 7);
-        days = days;
+        type DayPlan = {
+            top: number;
+            bottom: number;
+            text: string;
+        };
     }
 
-    const daysOfWeek = [
-        "Poniedziałek",
-        "Wtorek",
-        "Środa",
-        "Czwartek",
-        "Piątek",
-        "Sobota",
-        "Niedziela",
-    ];
-
     function generateHours() {
-        const hours = [];
+        const hours: string[] = [];
         for (let i = 0; i < 24; i++) {
             hours.push(i > 12 ? i - 12 + ` PM` : i + ` AM`);
         }
@@ -85,6 +88,16 @@
             first.getDate() == second.getDate()
         );
     }
+
+    const daysOfWeek = [
+        "Poniedziałek",
+        "Wtorek",
+        "Środa",
+        "Czwartek",
+        "Piątek",
+        "Sobota",
+        "Niedziela",
+    ];
 </script>
 
 <div class="calendar">
@@ -100,14 +113,14 @@
     </div>
     <div class="calendar__body">
         <div class="hours">
-            {#each hours as hour}
+            {#each generateHours() as hour}
                 <div class="hour">{hour}</div>
             {/each}
         </div>
         <div class="week">
-            {#each days as day}
+            {#each dayPlans as plan}
                 <div class="day">
-                    {#each day as { top, bottom, text }}
+                    {#each plan as { top, bottom, text }}
                         <div
                             class="plan"
                             style="top: {top * 100}%; bottom: {bottom * 100}%"
