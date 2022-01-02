@@ -101,15 +101,17 @@
 </script>
 
 <div class="calendar">
-    <div style="display: flex; flex-direction: row">
+    <div class="calendar-header">
         <div class="date-texts">
             <DateText date={monday} />
             <br />
             <DateText date={nextMonday} />
         </div>
+        <div class="days-header">
         {#each daysOfWeek as day}
             <div class="day-header">{day}</div>
         {/each}
+        </div>
     </div>
     <div class="calendar__body">
         <div class="hours">
@@ -141,17 +143,23 @@
     }
 
     .calendar {
-        position: relative;
         width: 100%;
-        overflow: hidden;
     }
 
     .calendar__body {
-        display: flex;
+        display: grid;
+        grid-template-columns: 100px;
     }
 
     .hours {
-        width: 100px;
+        
+        grid-column-start: 1;
+        grid-column-end: 1;
+    }
+    .calendar-header
+    {
+        display: grid;
+        grid-template-columns: 100px;
     }
 
     .day {
@@ -162,17 +170,17 @@
         margin-left: 2px;
         margin-right: 2px;
         padding: 10px;
-        position: relative;
     }
 
     .plan {
         background-color: aqua;
-        position: absolute;
     }
 
     .week {
-        flex: 1 0;
-        display: flex;
+        grid-column-start: 2;
+        grid-column-end: 2;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
     }
 
     .day-header {
@@ -180,6 +188,11 @@
         padding: 10px;
         margin: 2px;
         border: 1px solid black;
+    }
+    .days-header{
+        grid-column-start: 2;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
     }
 
     .date-texts {
