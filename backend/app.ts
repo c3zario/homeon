@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import { connectToDatabase, GetList, List } from './Database';
+import { connectToDatabase, List, collections } from './Database';
 
 const app = express();
 app.use(express.static("frontend/public"));
@@ -15,7 +15,6 @@ async function Main()
         res.sendFile(path.resolve("frontend/public/index.html"));
     });
     app.post("/test", async (req, res) => {
-        console.log("elo");
         res.send(List);
     });
 
