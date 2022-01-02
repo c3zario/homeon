@@ -1,6 +1,7 @@
 <script type="ts">
-    import Calendar from "./Calendar.svelte";
+    import Calendar from "./components/Calendar.svelte";
     import { Router, Link, Route } from "svelte-routing";
+import List from "./components/list.svelte";
 
     let plans = [
         {
@@ -45,9 +46,11 @@
         <input type="date" bind:value={date} />
         <input type="time" bind:value={time} />
     </Route>
-    <Route path="/test">
-        <h2>Test</h2>
-    </Route>
+    <nav>
+        <Route path="/test">
+            <List />
+        </Route>
+    </nav>
     <Route>
         <p>404 Not Found</p>
     </Route>
