@@ -4,6 +4,7 @@
 
     import Authorization from "./components/Authorization.svelte";
     import List from "./components/list.svelte";
+    import { addDays } from "./util/date";
 
     let plans = [
         {
@@ -27,43 +28,55 @@
             text: "was",
         },
     ];
-    let date = "2021-12-26";
-    let time = "20:54";
+    let date = new Date("2021-12-12");
 </script>
 
-{#await fetch("/checkLogin").then(response => response.json()) then user}
-{#if !user.login}
-    <Authorization />
-{:else}
-    {user.login}
-    <button on:click={() => { fetch("/logout"); window.location.reload() }}>Wyloguj</button>
-    <Router>
-        <h1>Hello world!</h1>
-        <nav>
-            <ul>
-                <li>
-                    <Link to="/">Kalendarz</Link>
-                </li>
-                <li>
-                    <Link to="/test">Test</Link>
-                </li>
-            </ul>
-        </nav>
-        <Route path="/">
-            <Calendar {plans} date={new Date()} />
-            <input type="date" bind:value={date} />
-            <input type="time" bind:value={time} />
-        </Route>
-        <nav>
-            <Route path="/test">
-                <List />
+{#await fetch("/checkLogin").then((response) => response.json()) then user}
+    {#if !user.login}
+        <Authorization />
+    {:else}
+        {user.login}
+        <button
+            on:click={() => {
+                fetch("/logout");
+                window.location.reload();
+            }}>Wyloguj</button
+        >
+        <Router>
+            <h1>Hello world!</h1>
+            <nav>
+                <ul>
+                    <li>
+                        <Link to="/">Kalendarz</Link>
+                    </li>
+                    <li>
+                        <Link to="/test">Test</Link>
+                    </li>
+                </ul>
+            </nav>
+            <Route path="/">
+                <Calendar {plans} {date} />
+                <button
+                    on:click={() => {
+                        date = addDays(date, -7);
+                    }}>←</button
+                >
+                <button
+                    on:click={() => {
+                        date = addDays(date, 7);
+                    }}>→</button
+                >
             </Route>
-        </nav>
-        <Route>
-            <p>404 Not Found</p>
-        </Route>
-    </Router>
-{/if}
+            <nav>
+                <Route path="/test">
+                    <List />
+                </Route>
+            </nav>
+            <Route>
+                <p>404 Not Found</p>
+            </Route>
+        </Router>
+    {/if}
 {/await}
 
 <style>

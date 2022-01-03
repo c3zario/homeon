@@ -1,5 +1,6 @@
 <script type="ts">
     import DateText from "./DateText.svelte";
+    import { addDays } from "../util/date";
 
     export let plans: Plans;
 
@@ -73,12 +74,6 @@
             date.getMonth(),
             date.getDate() - date.getDay() + 1
         );
-    }
-
-    function addDays(date: Date, days: number) {
-        const copy = new Date(date);
-        copy.setDate(date.getDate() + days);
-        return copy;
     }
 
     function isSameDate(first: Date, second: Date) {
