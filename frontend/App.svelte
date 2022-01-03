@@ -1,7 +1,9 @@
 <script type="ts">
     import Calendar from "./components/Calendar.svelte";
     import { Router, Link, Route } from "svelte-routing";
-import List from "./components/list.svelte";
+
+    import Authorization from "./components/Authorization.svelte";
+    import List from "./components/list.svelte";
 
     let plans = [
         {
@@ -29,32 +31,40 @@ import List from "./components/list.svelte";
     let time = "20:54";
 </script>
 
-<Router>
-    <h1>Hello world!</h1>
-    <nav>
-        <ul>
-            <li>
-                <Link to="/">Kalendarz</Link>
-            </li>
-            <li>
-                <Link to="/test">Test</Link>
-            </li>
-        </ul>
-    </nav>
-    <Route path="/">
-        <Calendar {plans} date={new Date()} />
-        <input type="date" bind:value={date} />
-        <input type="time" bind:value={time} />
-    </Route>
-    <nav>
-        <Route path="/test">
-            <List />
+{#await fetch("/checkLogin").then(response => response.json()) then user}
+{#if !user.login}
+    <Authorization />
+{:else}
+    {user.login}
+    <button on:click={() => { fetch("/logout"); window.location.reload() }}>Wyloguj</button>
+    <Router>
+        <h1>Hello world!</h1>
+        <nav>
+            <ul>
+                <li>
+                    <Link to="/">Kalendarz</Link>
+                </li>
+                <li>
+                    <Link to="/test">Test</Link>
+                </li>
+            </ul>
+        </nav>
+        <Route path="/">
+            <Calendar {plans} date={new Date()} />
+            <input type="date" bind:value={date} />
+            <input type="time" bind:value={time} />
         </Route>
-    </nav>
-    <Route>
-        <p>404 Not Found</p>
-    </Route>
-</Router>
+        <nav>
+            <Route path="/test">
+                <List />
+            </Route>
+        </nav>
+        <Route>
+            <p>404 Not Found</p>
+        </Route>
+    </Router>
+{/if}
+{/await}
 
 <style>
     :global(*, ::before, ::after) {
