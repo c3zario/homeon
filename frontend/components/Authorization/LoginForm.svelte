@@ -1,3 +1,6 @@
+<style lang="scss">
+    @import "../../styles/Authorization.scss";
+</style>
 <script type="ts">
     async function postJson(url: any, data: any) {
         const response = await fetch(url, {
@@ -24,11 +27,15 @@
         }
     }
 </script>
-<h2>Logowanie</h2>
 <form class="form" on:submit|preventDefault={submit}>
-    Login <input type="text" bind:value={login} required /><br>
-    Hasło <input type="password" bind:value={password} required/><br>
-
-    <p>{info}</p><br>
+    <span>
+        <input id="login" type="text" bind:value={login} required />
+        <label for="login">Login</label>
+    </span>
+    <span>
+        <input id="password" type="password" bind:value={password} required/>
+        <label for="password">Hasło</label>
+    </span>
+    <p>{info}</p>
     <button type="submit">Zaloguj</button>
 </form>

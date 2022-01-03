@@ -7,11 +7,20 @@
         <title>Home ON</title>
         <link rel="stylesheet" href="bundle.css" />
         <link rel="manifest" href="manifest.json">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
         <script>
             if ("serviceWorker" in navigator) {
                 navigator.serviceWorker.register("/service-worker.js");
             }
         </script>
+        <style>
+            html, body {
+                margin: 0;
+                height: 100%;
+
+                font-family: Roboto;
+            }
+        </style>
     </head>
     <body></body>
     <script defer src="bundle.js"></script>
