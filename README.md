@@ -6,3 +6,14 @@
 ## Development
 1. `npm run dev`
 2. Open `localhost:3000` in the browser
+
+## Database
+list
+{
+  "id": ,
+  "text": ,
+  "count": ,
+}
+users
+{
+}
