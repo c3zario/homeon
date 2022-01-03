@@ -6,6 +6,8 @@
         text: String,
     }
     let List:item[] = [];
+    let text: String;
+    let count: Number;
     onMount(async () => {
         const rawResponse = await fetch("/test", {
             method: 'POST',
@@ -15,27 +17,45 @@
             }
         });
         List = await rawResponse.json();
-        console.log(List);
     });
-    function DeleteItem(e)
+    function DeleteItem(id:Number)
+    {
+        List = List.filter((item) => {return item.id != id});
+        UpdateList(List);
+    }
+    function UpdateList(list:item[])
+    {
+        fetch("/updateList", {
+            method: 'POST',
+            body: JSON.stringify(list)
+        });
+    }
+    function SendForm()
     {  
-        console.log(e);
+        fetch("/addToList", {
+            method: 'POST',
+            body: JSON.stringify({'text': text, 'count': count})
+        });
+        text = "";
+        count = 0;
     }
 </script>
+
 {#each List as item}
     <div class="card">
         <div class="num-display">
-            {item.id}
+            {item.count} 
         </div>
         <div class="close" on:click={() => DeleteItem(item.id)}>X</div>
         <p class="text-display">
             {item.text}
             <br>
-            Ilość:
-            {item.count} 
         </p>
     </div>
 {/each}
+<input type="text" bind:value={text}>
+<input type="number" bind:value={count}>
+<input type="submit" on:click={SendForm}>
 
 <style>
 
