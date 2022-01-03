@@ -1,3 +1,6 @@
+<style lang="scss">
+    @import "../../styles/Authorization.scss";
+</style>
 <script type="ts">
     async function postJson(url: any, data: any) {
         const response = await fetch(url, {
@@ -20,11 +23,19 @@
         info = await postJson("/register", { login, password, email });
     }
 </script>
-<h2>Rejestracja</h2>
 <form class="form" on:submit|preventDefault={submit}>
-    Login <input type="text" bind:value={login} required /><br>
-    Hasło <input type="password" bind:value={password} required /><br>
-    Email <input type="email" bind:value={email} required /><br>
+    <span>
+        <input id="login" type="text" bind:value={login} required />
+        <label for="login">Login</label>
+    </span>
+    <span>
+        <input id="password" type="password" bind:value={password} required />
+        <label for="password">Hasło</label>
+    </span>
+    <span>
+        <input id="email" type="email" bind:value={email} required />
+        <label for="email">Email</label>
+    </span>
 
     <p>{info}</p><br>
     <button type="submit">Zarejestruj</button>
