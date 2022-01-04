@@ -1,13 +1,14 @@
 <script type="ts">
     import { onMount } from 'svelte';
     interface item{
-        id:Number,
-        count: Number,
-        text: String,
+        id:number,
+        count: number,
+        text: string,
     }
     let List:item[] = [];
-    let text: String;
-    let count: Number;
+    let text: string;
+    let count: number;
+    let message:string = "";
     onMount(async () => {
         const rawResponse = await fetch("/test", {
             method: 'POST',
@@ -18,7 +19,7 @@
         });
         List = await rawResponse.json();
     });
-    function DeleteItem(id:Number)
+    function DeleteItem(id:number)
     {
         List = List.filter((item) => {return item.id != id});
         UpdateList(List);
@@ -32,12 +33,27 @@
     }
     function SendForm()
     {  
-        fetch("/addToList", {
-            method: 'POST',
-            body: JSON.stringify({'text': text, 'count': count})
-        });
-        text = "";
-        count = 0;
+        if(text.trim().length > 2 || count > 0)
+        {
+            let max = 0;
+            for(let i=0;i<List.length;i++)
+                if(max < List[i].id)
+                    max = List[i].id;
+            max++;
+            List.push({'text': text, 'count': count, id: max});
+            List = List;
+            
+            fetch("/addToList", {
+                method: 'POST',
+                body: JSON.stringify({'text': text, 'count': count})
+            });
+            text = "";
+            count = 0;
+        }
+        else
+        {
+            message = "Kurwa co ty robisz pecie pierdolony";
+        }
     }
 </script>
 
@@ -53,12 +69,13 @@
         </p>
     </div>
 {/each}
-<input type="text" bind:value={text}>
-<input type="number" bind:value={count}>
-<input type="submit" on:click={SendForm}>
-
+<div class="input-group">
+    <input type="text" bind:value={text}>
+    <input type="number" bind:value={count}>
+    <input type="submit" on:click={SendForm}>
+</div>
+{message}
 <style>
-
     .num-display {
         position: absolute;
         top: -10px;
@@ -91,4 +108,20 @@
         margin: 20px 0;
         position: relative;
     }
+    .input-group {
+    background-color: rgb(121, 3, 121);
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    border-radius: 8px;
+  }
+  input {
+    margin: 5px;
+    font-size: 16px;
+  }
+  
+  input:focus {
+    outline: none;
+  }
 </style>
