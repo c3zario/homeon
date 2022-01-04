@@ -33,7 +33,7 @@
     }
     function SendForm()
     {  
-        if(text.trim().length > 2 || count > 0)
+        if(text.trim().length > 2 && count > 0)
         {
             let max = 0;
             for(let i=0;i<List.length;i++)
@@ -49,6 +49,7 @@
             });
             text = "";
             count = 0;
+            message = "";
         }
         else
         {
