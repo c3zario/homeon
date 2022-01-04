@@ -103,9 +103,9 @@
             <DateText date={nextMonday} />
         </div>
         <div class="days-header">
-        {#each daysOfWeek as day}
-            <div class="day-header">{day}</div>
-        {/each}
+            {#each daysOfWeek as day}
+                <div class="day-header">{day}</div>
+            {/each}
         </div>
     </div>
     <div class="calendar__body">
@@ -147,12 +147,11 @@
     }
 
     .hours {
-        
         grid-column-start: 1;
         grid-column-end: 1;
     }
-    .calendar-header
-    {
+
+    .calendar-header {
         display: grid;
         grid-template-columns: 100px;
     }
@@ -165,10 +164,12 @@
         margin-left: 2px;
         margin-right: 2px;
         padding: 10px;
+        position: relative;
     }
 
     .plan {
         background-color: aqua;
+        position: absolute;
     }
 
     .week {
@@ -184,7 +185,7 @@
         margin: 2px;
         border: 1px solid black;
     }
-    .days-header{
+    .days-header {
         grid-column-start: 2;
         display: grid;
         grid-template-columns: repeat(7, 1fr);
