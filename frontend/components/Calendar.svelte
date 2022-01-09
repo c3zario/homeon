@@ -19,12 +19,11 @@
     $: nextMonday = addDays(monday, 7);
     $: dayPlans = generateDayPlans(plans, monday, nextMonday);
     $: {
-        let day = 10
+        let day:number
         if(innerWidth < 800)
         {
-            //days-header   day
             let d = date
-            day = d.getDay()// ? d.getDay() - 1 : 6
+            day = d.getDay() ? d.getDay() - 1 : 6
             let arr = document.querySelectorAll<HTMLElement>(".day");
             let tab = document.querySelectorAll<HTMLElement>(".day-header");
             for(let i=0;i<arr.length;i++)
@@ -108,7 +107,7 @@
         return new Date(
             date.getFullYear(),
             date.getMonth(),
-            date.getDate() - date.getDay() + 1
+            date.getDay() == 0 ? date.getDate() - 6 : date.getDate() - date.getDay() + 1
         );
     }
 
