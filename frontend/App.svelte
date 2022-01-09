@@ -204,7 +204,6 @@
     ];
     let date = new Date();
     let innerWidth: number;
-    let d = 0;//days on left or right
 </script>
 <svelte:window bind:innerWidth />
 {#await fetch("/checkLogin").then((response) => response.json()) then user}
