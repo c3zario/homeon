@@ -191,10 +191,22 @@
             end: new Date("2021-12-20 23:00"),
             text: "was",
         },
+        {
+            start: new Date("2022-01-08 13:00"),
+            end: new Date("2022-01-09 23:00"),
+            text: "Cezary rosiński to spoko gość",
+        },
+        {
+            start: new Date("2022-01-10 23:00"),
+            end: new Date("2022-01-13 13:00"),
+            text: "igor swiens to dobry kolega",
+        },
     ];
-    let date = new Date("2021-12-12");
+    let date = new Date();
+    let innerWidth: number;
+    let d = 0;//days on left or right
 </script>
-
+<svelte:window bind:innerWidth />
 {#await fetch("/checkLogin").then((response) => response.json()) then user}
     {#if !user.login}
         <Authorization />
@@ -251,12 +263,18 @@
                     <Calendar {plans} {date} />
                     <button
                         on:click={() => {
-                            date = addDays(date, -7);
+                            if(innerWidth < 800)
+                                date = addDays(date, -1);
+                            else
+                                date = addDays(date, -7);
                         }}>←</button
                     >
                     <button
                         on:click={() => {
-                            date = addDays(date, 7);
+                            if(innerWidth < 800)
+                                date = addDays(date, 1);
+                            else
+                                date = addDays(date, 7);
                         }}>→</button
                     >
                 </Route>
