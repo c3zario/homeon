@@ -14,9 +14,45 @@
 
     export let date: Date;
 
+    let innerWidth:number;
     $: monday = getMonday(date);
     $: nextMonday = addDays(monday, 7);
     $: dayPlans = generateDayPlans(plans, monday, nextMonday);
+    $: {
+        let day = 10
+        if(innerWidth < 800)
+        {
+            //days-header   day
+            let d = date
+            day = d.getDay()// ? d.getDay() - 1 : 6
+            let arr = document.querySelectorAll<HTMLElement>(".day");
+            let tab = document.querySelectorAll<HTMLElement>(".day-header");
+            for(let i=0;i<arr.length;i++)
+            {
+                if(day != i)
+                {
+                    arr[i].style.display = "none";
+                    tab[i].style.display = "none";
+                }
+                else
+                {
+                    arr[i].style.display = "block";
+                    tab[i].style.display = "block";
+                }
+            }
+        }
+        else
+        {
+            let arr = document.querySelectorAll<HTMLElement>(".day");
+            let tab = document.querySelectorAll<HTMLElement>(".day-header");
+            for(let i=0;i<arr.length;i++)
+            {
+                arr[i].style.display = "block";
+                tab[i].style.display = "block";
+            }
+        }
+        
+    }
 
     function generateDayPlans(plans: Plans, weekBegin: Date, weekEnd: Date) {
         const dayPlans: DayPlan[][] = Array.from({ length: 7 }, () => []);
@@ -94,13 +130,17 @@
         "Niedziela",
     ];
 </script>
-
+<svelte:window bind:innerWidth />
 <div class="calendar">
     <div class="calendar-header">
         <div class="date-texts">
-            <DateText date={monday} />
-            <br />
-            <DateText date={nextMonday} />
+            {#if innerWidth < 800}
+                <DateText date={date}/>
+            {:else}
+                <DateText date={monday}/>
+                <br />
+                <DateText date={nextMonday}/>
+            {/if}
         </div>
         <div class="days-header">
             {#each daysOfWeek as day}
