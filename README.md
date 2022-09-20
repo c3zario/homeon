@@ -7,7 +7,7 @@
 ## Development
 1. Make sure you have MongoDB running
 2. `npm run dev`
-3. Open `localhost:3000` in the browser
+3. Open `localhost:8080` in the browser
 
 ## Python generate App
 `auto-py-to-exe`
