@@ -6,7 +6,7 @@ export async function getDatabase() {
     dotenv.config();
     const databaseName = process.env.DATABASE_NAME ?? "HomeON";
     const client = new MongoClient(
-        process.env.DATABASE_CONNECTION_STRING ?? "mongodb://localhost:27017"
+        process.env.DATABASE_CONNECTION_STRING ?? "mongodb://127.0.0.1:27017"
     );
     await client.connect();
     const database = client.db(databaseName);
