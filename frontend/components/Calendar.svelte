@@ -304,7 +304,6 @@
                 token: $group.token,
                 plan,
             });
-            plans = [...plans, deserializePlan(plan)];
         }}
         closePopup={() => {
             addPlanPopupShown = false;

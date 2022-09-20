@@ -156,6 +156,7 @@ async function main() {
                 { token: req.body.token },
                 { $push: { plans: req.body.plan } }
             );
+            await updateRooms(req.body.token);
             res.send();
         });
     });
