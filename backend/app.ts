@@ -193,7 +193,7 @@ async function main() {
                 { token: group.group.token },
                 { $set: { list: group.group.list } }
             );
-            await updateRooms(group.token);
+            await updateRooms(group.group.token);
             res.send();
         });
     });

@@ -13,7 +13,7 @@
         {#each groups as group}
             <div>
                 <span
-                    class:active={group === $currentGroup}
+                    class:active={group.token == $currentGroup.token}
                     on:click={() => {
                         currentGroup.set(group);
                     }}>{group.name}</span
