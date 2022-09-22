@@ -72,7 +72,7 @@
     <script
         async
         defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABA_utwjiBnqR4aUOIbCTieCBZO7gryKM">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDvixtfnXVp-9dv8KbETLWXvUHG83Nbe8">
     </script>
 </svelte:head>
 

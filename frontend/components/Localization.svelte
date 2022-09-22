@@ -101,12 +101,15 @@
     }
 
     function OffAllLights() {
-        for (const { id } of $currentGroup.lights) {
-            api.post("switch-light", {
-                id,
-                token: $currentGroup.token,
-                work: false,
-            });
+        if(typeof $currentGroup.lights !== 'undefined')
+        {
+            for (const { id } of $currentGroup.lights) {
+                api.post("switch-light", {
+                    id,
+                    token: $currentGroup.token,
+                    work: false,
+                });
+            }
         }
     }
 
