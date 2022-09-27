@@ -11,6 +11,7 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import * as routes from "./routes";
 import { addApi } from "./api";
+import { isDeepStrictEqual } from "util";
 
 dotenv.config();
 
@@ -200,17 +201,20 @@ async function main() {
 
     app.post("/api/remove-plan", (req, res) => {
         handleErrors(async () => {
-            let group = await database.groups.findOne({ token: req.body[0] });
-            let plans = group?.plans;
-            let newPlans: any = [];
-            plans?.forEach((plan) => {
-                if (plan.text != req.body[1].text) newPlans.push(plan);
-            });
-            await database.groups.updateOne(
-                { token: req.body[0] },
-                { $set: { plans: newPlans } }
-            );
-            await updateRooms(req.body[0]);
+            const { token, plan } = req.body;
+            const group = await database.groups.findOne({ token });
+            if (group === null)
+                throw new Error("Group not found when removing plan");
+            const { plans } = group;
+            console.log(plan);
+            for (let i = 0; i < plans.length; i++) {
+                if (isDeepStrictEqual(plan, plans[i])) {
+                    plans.splice(i, 1);
+                    break;
+                }
+            }
+            await database.groups.updateOne({ token }, { $set: { plans } });
+            await updateRooms(token);
             res.send();
         });
     });

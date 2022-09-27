@@ -13,6 +13,7 @@
         start: Date;
         end: Date;
         text: string;
+        weekDays?: boolean[];
     };
 </script>
 

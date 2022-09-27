@@ -13,6 +13,7 @@
     import type { Group, SerializedPlan } from "../../common/types";
     import AddPlanPopup from "./AddPlanPopup.svelte";
     import PlanPopup from "./PlanPopup.svelte";
+    import { DateTime } from "luxon";
 
     export let date: Date;
 
@@ -287,7 +288,14 @@
 {#if selectedPlan}
     <PlanPopup
         removePlan={async (plan) => {
-            await api.post("remove-plan", [$group.token, plan]);
+            await api.post("remove-plan", {
+                token: $group.token,
+                plan: {
+                    ...plan,
+                    start: DateTime.fromJSDate(plan.start).toISO().slice(0, 16),
+                    end: DateTime.fromJSDate(plan.end).toISO().slice(0, 16),
+                },
+            });
         }}
         plan={selectedPlan}
         closePopup={() => {
