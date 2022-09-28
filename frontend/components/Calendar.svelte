@@ -6,6 +6,7 @@
         addDays,
         getFractionOfDayPassed,
         getMonday,
+        getMonthText,
         isSameDate,
         makeDateText,
         padZero,
@@ -234,7 +235,9 @@
     <div class="calendar__header">
         <div class="date-texts">
             {#if innerWidth < 800}
-                {makeDateText(date)}
+                {date.getDate()}
+                <br />
+                {getMonthText(date)}
             {:else}
                 {makeDateText(monday)}
                 <br />

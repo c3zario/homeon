@@ -9,18 +9,18 @@ export const daysOfTheWeek = [
 ];
 
 const months = [
-    "stycznia",
+    "sty.",
     "lutego",
     "marca",
-    "kwietnia",
+    "kwi.",
     "maja",
-    "czerwca",
+    "cze.",
     "lipca",
-    "sierpnia",
-    "września",
-    "października",
-    "listopada",
-    "grudnia",
+    "sie.",
+    "wrz.",
+    "paź.",
+    "lis.",
+    "gru.",
 ];
 
 export function makeDateText(date: Date) {
@@ -29,7 +29,7 @@ export function makeDateText(date: Date) {
     return `${day} ${month}`;
 }
 
-function getMonthText(date: Date) {
+export function getMonthText(date: Date) {
     return months[date.getMonth()];
 }
 
