@@ -1,15 +1,17 @@
 <script type="ts">
     import Popup from "./Popup";
     import { makeDateText, padZero } from "../util/date";
+    import type { ID } from "common/types";
 
-    export let removePlan: (plan: Plan) => Promise<void>;
+    export let removePlan: (id: ID) => Promise<void>;
     export let closePopup: () => void;
 
     export let plan: Plan;
 
-    const { start, end, text } = plan;
+    const { id, start, end, text } = plan;
 
     type Plan = {
+        id: ID;
         start: Date;
         end: Date;
         text: string;
@@ -23,7 +25,7 @@
         <div
             class="delete-plan"
             on:click={async () => {
-                await removePlan(plan);
+                await removePlan(id);
                 closePopup();
             }}
         >

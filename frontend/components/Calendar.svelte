@@ -10,14 +10,13 @@
         makeDateText,
         padZero,
     } from "../util/date";
-    import type { Group, SerializedPlan } from "../../common/types";
+    import type { Group, ID, SerializedPlan } from "../../common/types";
     import AddPlanPopup from "./AddPlanPopup.svelte";
     import PlanPopup from "./PlanPopup.svelte";
-    import { DateTime } from "luxon";
 
     export let date: Date;
 
-    let selectedPlan: Plan | false = false;
+    let selectedPlan: Plan | undefined;
 
     const group = getContext<Writable<Group>>("group");
 
@@ -99,7 +98,9 @@
 
     function generateDayPlans(plans: Plan[], weekBegin: Date, weekEnd: Date) {
         const dayPlans: DayPlan[][] = Array.from({ length: 7 }, () => []);
-        for (const { start, end, text, weekDays } of plans.filter(isThisWeek)) {
+        for (const { id, start, end, text, weekDays } of plans.filter(
+            isThisWeek
+        )) {
             if (weekDays) {
                 weekDays.forEach((repeats, weekDay) => {
                     if (!repeats) return;
@@ -109,6 +110,7 @@
                         getDaysBetweenDates(start, end)
                     );
                     generateDayPlan({
+                        id,
                         start: new Date(
                             today.getFullYear(),
                             today.getMonth(),
@@ -127,7 +129,7 @@
                     });
                 });
             } else {
-                generateDayPlan({ start, end, text });
+                generateDayPlan({ id, start, end, text });
             }
         }
         return dayPlans;
@@ -142,10 +144,12 @@
         }
 
         function generateDayPlan({
+            id,
             start,
             end,
             text,
         }: {
+            id: ID;
             start: Date;
             end: Date;
             text: string;
@@ -155,6 +159,7 @@
             do {
                 current = addDays(monday, i);
                 dayPlans[i].push({
+                    id,
                     top: isSameDate(current, start)
                         ? getFractionOfDayPassed(start)
                         : 0,
@@ -196,12 +201,8 @@
         "Niedziela",
     ];
 
-    function clickPlan(text: string) {
-        plans.forEach((plan) => {
-            if (plan.text == text) {
-                selectedPlan = plan;
-            }
-        });
+    function clickPlan(id: ID) {
+        selectedPlan = plans.find((plan) => plan.id == id);
     }
 
     function deserializePlan({ start, end, ...rest }: SerializedPlan): Plan {
@@ -213,12 +214,14 @@
     }
 
     type DayPlan = {
+        id: ID;
         top: number;
         bottom: number;
         text: string;
     };
 
     type Plan = {
+        id: ID;
         start: Date;
         end: Date;
         text: string;
@@ -260,11 +263,11 @@
                 >
                     {#each columns as column}
                         <div class="column">
-                            {#each column as { top, bottom, width, text }}
+                            {#each column as { id, top, bottom, width, text }}
                                 {#if top < 1 && bottom < 1}
                                     <div
                                         on:click|stopPropagation={() =>
-                                            clickPlan(text)}
+                                            clickPlan(id)}
                                         class="plan"
                                         style="top: {top *
                                             100}%; bottom: {bottom *
@@ -287,19 +290,15 @@
 
 {#if selectedPlan}
     <PlanPopup
-        removePlan={async (plan) => {
+        removePlan={async (id) => {
             await api.post("remove-plan", {
                 token: $group.token,
-                plan: {
-                    ...plan,
-                    start: DateTime.fromJSDate(plan.start).toISO().slice(0, 16),
-                    end: DateTime.fromJSDate(plan.end).toISO().slice(0, 16),
-                },
+                id,
             });
         }}
         plan={selectedPlan}
         closePopup={() => {
-            selectedPlan = false;
+            selectedPlan = undefined;
         }}
     />
 {/if}

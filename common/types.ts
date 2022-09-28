@@ -1,3 +1,5 @@
+export type ID = string;
+
 export type Group = {
     name: string;
     token: string;
@@ -8,6 +10,7 @@ export type Group = {
 };
 
 export type SerializedPlan = {
+    id: ID;
     start: string;
     end: string;
     text: string;
