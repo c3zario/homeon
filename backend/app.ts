@@ -30,27 +30,33 @@ async function main() {
                 socket.join(newGroup?.token);
             });
         });
-        socket.on("newPosition", (obj) => {
-            handleErrors(async () => {
-                //let url = `https://api.opencagedata.com/geocode/v1/json?q=${obj.position.x}+${obj.position.y}&key=6f9855f0d9d04be3b7d02f810a09b3ca`;
-                //let street = (await axios.get(url)).data.results[0].formatted;
-                let street = "";
-                await database.users.updateOne(
-                    { login: obj.user.login, email: obj.user.email },
-                    {
-                        $set: {
-                            position: obj.position,
-                            time: obj.time,
-                            street: street,
-                        },
+        socket.on(
+            "newPosition",
+            ({ user: { login, email }, position, time, group: { token } }) => {
+                handleErrors(async () => {
+                    const street = await getStreet(
+                        process.env.OPEN_CAGE_DATA_API_KEY
+                    );
+                    await database.users.updateOne(
+                        { login, email },
+                        {
+                            $set: {
+                                position,
+                                time,
+                                street: street,
+                            },
+                        }
+                    );
+                    io.to(token).emit("position", await getPositions(token));
+
+                    async function getStreet(apiKey: string | undefined) {
+                        if (apiKey === undefined) return "";
+                        const url = `https://api.opencagedata.com/geocode/v1/json?q=${position.x}+${position.y}&key=${apiKey}`;
+                        return (await axios.get(url)).data.results[0].formatted;
                     }
-                );
-                io.to(obj.group.token).emit(
-                    "position",
-                    await getPositions(obj.group.token)
-                );
-            });
-        });
+                });
+            }
+        );
         socket.on("getPositions", (group) => {
             handleErrors(async () => {
                 io.to(group.token).emit(
