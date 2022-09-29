@@ -51,8 +51,10 @@
                     if (
                         columns[j].every(
                             (right) =>
-                                right.bottom < 1 - left.top &&
-                                left.bottom > 1 - right.top
+                                (right.bottom < 1 - left.top &&
+                                    left.bottom > 1 - right.top) ||
+                                (right.bottom > 1 - left.top &&
+                                    left.bottom < 1 - right.top)
                         )
                     ) {
                         ++left.width;
