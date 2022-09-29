@@ -22,7 +22,7 @@ async def message(data):
 
 
 async def main():
-    await client.connect("https://egondola.eu/")
+    await client.connect("https://homeon.azurewebsites.net/")
     print("Successfully connected to Home ON")
     await client.wait()
 
