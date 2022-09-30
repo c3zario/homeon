@@ -51,7 +51,12 @@ async function main() {
                     async function getStreet(apiKey: string | undefined) {
                         if (apiKey === undefined) return "";
                         const url = `https://api.opencagedata.com/geocode/v1/json?q=${position.x}+${position.y}&key=${apiKey}`;
-                        return (await axios.get(url)).data.results[0].formatted;
+                        try {
+                            return (await axios.get(url)).data.results[0]
+                                .formatted;
+                        } catch {
+                            return "";
+                        }
                     }
                 });
             }
