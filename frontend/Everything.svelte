@@ -45,27 +45,15 @@
     const user = getContext<Writable<User>>("user");
     const d = new Date();
 
-    navigator.geolocation.watchPosition(
-        (pos) => {
-            let obj = {
-                user: $user,
-                position: { x: pos.coords.latitude, y: pos.coords.longitude },
-                time: d.getTime(),
-                group: $currentGroup,
-            };
-            socket.emit("newPosition", obj);
-        },
-        (err) => {
-            let obj = {
-                user: $user,
-                positions: err.message,
-                time: d.getTime(),
-                groups,
-                $currentGroup,
-            };
-            socket.emit("newPosition", obj);
-        }
-    );
+    navigator.geolocation.watchPosition((pos) => {
+        let obj = {
+            user: $user,
+            position: { x: pos.coords.latitude, y: pos.coords.longitude },
+            time: d.getTime(),
+            group: $currentGroup,
+        };
+        socket.emit("newPosition", obj);
+    });
 </script>
 
 <svelte:head>
@@ -128,7 +116,7 @@
                         showGroups = !showGroups;
                     }}
                 >
-                    Grupy <i class="icon-{showGroups ? "down" : "left"}-dir"/>
+                    Grupy <i class="icon-{showGroups ? 'down' : 'left'}-dir" />
                 </div>
                 <div id="go_home">
                     <a href="/" use:link><i class="icon-home" /></a>
@@ -143,32 +131,24 @@
                         <div>
                             <div>
                                 <a href="/home-manage" use:link>
-                                    <div class="home-manage">
-                                        Home Manager
-                                    </div>
+                                    <div class="home-manage">Home Manager</div>
                                 </a>
                                 <a href="/plans" use:link>
-                                    <div class="plans">
-                                        Plany
-                                    </div>
+                                    <div class="plans">Plany</div>
                                 </a>
                             </div>
                         </div>
                         <div>
                             <div>
                                 <a href="/shopping-list" use:link>
-                                    <div class="shopping-list">
-                                        Listy
-                                    </div>
+                                    <div class="shopping-list">Listy</div>
                                 </a>
                             </div>
                         </div>
                         <div>
                             <div>
                                 <a href="/household-duties" use:link>
-                                    <div class="household-duties">
-                                        Mapy
-                                    </div>
+                                    <div class="household-duties">Mapy</div>
                                 </a>
                             </div>
                         </div>
@@ -299,7 +279,7 @@
                 align-items: center;
                 justify-content: center;
                 color: white;
-                
+
                 background-color: $p-color-dark;
                 border-radius: 0vmin 0vmin 2vmin 2vmin;
             }
@@ -326,7 +306,7 @@
 
                     width: 12vmin;
                     height: 12vmin;
-                    
+
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -376,7 +356,10 @@
                             }
                         }
 
-                        .home-manage, .plans, .shopping-list, .household-duties {
+                        .home-manage,
+                        .plans,
+                        .shopping-list,
+                        .household-duties {
                             background-size: 35%;
                             background-position-y: 60%;
 
