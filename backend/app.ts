@@ -8,7 +8,6 @@ import http from "http";
 import { Server } from "socket.io";
 import axios from "axios";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
 import * as routes from "./routes";
 import { addApi } from "./api";
 
@@ -133,13 +132,6 @@ async function main() {
     app.post("/login", (req, res) => {
         handleErrors(async () => {
             res.send(await login(req));
-        });
-    });
-
-    app.get("/confirm/:token", (req, res, next) => {
-        handleErrors(async () => {
-            await confirm(req);
-            next();
         });
     });
 
@@ -305,21 +297,29 @@ async function main() {
     server.listen(process.env.PORT || 8080);
 
     async function register(req: any) {
-        const email = await database.users.findOne({ email: req.body.email });
-        if (email) return "Podany adres email został już zarejestrowany";
+        const { login, email, password } = req.body;
 
-        const login = await database.users.findOne({ login: req.body.login });
-        if (login) return "Podany login jest już zajęty";
+        if (
+            await database.users.findOne({
+                email,
+            })
+        )
+            return "Podany adres email został już zarejestrowany";
+
+        if (
+            await database.users.findOne({
+                login,
+            })
+        )
+            return "Podany login jest już zajęty";
 
         const personalGroupToken = nanoid();
-        const confirmEmailToken = nanoid();
 
         await Promise.all([
             database.users.insertOne({
-                login: req.body.login,
-                password: await bcrypt.hash(req.body.password, 10),
-                email: req.body.email,
-                confirmEmailToken,
+                login,
+                password: await bcrypt.hash(password, 10),
+                email,
                 groups: [personalGroupToken],
                 position: { x: 0, y: 0 },
                 time: 0,
@@ -335,72 +335,24 @@ async function main() {
             }),
         ]);
 
-        console.log(confirmEmailToken);
-
-        await handleErrors(async () => {
-            await nodemailer
-                .createTransport({
-                    sendmail: true,
-                    newline: "unix",
-                    path: "/usr/sbin/sendmail",
-                })
-                .sendMail({
-                    from: '"HomeON" Inteligentny@Dom',
-                    to: req.body.email,
-                    subject: "Rejestracja konta",
-                    html: `
-<div style="padding: 15px; border-radius: 5px; background-color: #ff7043; color: white; text-align: center">
-<img src="https://egondola.eu/homeon.png" width="100" height="100" style="border-radius: 5px"><br>
-    <span style="color: white">Home ON</span><br>
-    <span style="color: white">Inteligentny Dom</span><br><br>
-
-    <h3>Witaj ${req.body.login}</h3><br><br>
-
-    <h4>Kliknij poniżej, aby dokończyć rejestrację</h4><br>
-    <a href="https://egondola.eu/confirm/${confirmEmailToken}"><button style="border: none; padding: 10px 30px; border-radius: 5px; color: white; background-color: #546e7a;">Potwierdź adres email</button></a>
-</div>`,
-                });
-        });
-
-        return "Konto zostało utworzone! Dokończ rejestrację klikając w link wysłany na podany adres email";
-    }
-
-    async function confirm(req: any) {
-        const confirmEmailToken = req.params.token;
-        const user = await database.users.findOne({
-            confirmEmailToken,
-        });
-
-        if (!user) return false;
-
-        await database.users.updateOne(
-            { confirmEmailToken },
-            { $unset: { confirmEmailToken: 1 } }
-        );
-
         req.session.user = {
-            login: user.login,
-            email: user.email,
+            login,
+            email,
         };
 
-        return true;
+        return "";
     }
 
     async function login(req: any) {
+        const { login, password } = req.body;
         const user = await database.users.findOne({
-            login: req.body.login,
+            login,
         });
-        if (!user) return "Konto o podanym loginie nie istnieje";
+        if (user === null) return "Konto o podanym loginie nie istnieje";
 
-        const passwordHash = await bcrypt.compare(
-            req.body.password,
-            user.password
-        );
+        const passwordHash = await bcrypt.compare(password, user.password);
 
         if (!passwordHash) return "Niepoprawne hasło";
-
-        if (user.confirmEmailToken)
-            return "Dokończ rejestrację klikając w link wysłany na podany adres email";
 
         req.session.user = {
             login: user.login,

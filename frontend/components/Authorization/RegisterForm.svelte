@@ -18,6 +18,9 @@
 
     async function submit() {
         info = await postJson("/register", { login, password, email });
+        if (info === "") {
+            location.reload();
+        }
     }
 </script>
 
