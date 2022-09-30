@@ -84,68 +84,79 @@
 
         getLights();
     }
+
+    async function resetAll() {
+        await api.post("reset-all", {});
+        lights = [];
+    }
 </script>
 
-<div id="all">
-    <div>
-        {#each lights as light, i}
-            <div class="light">
-                <div class="title">
-                    {#if !editLightSwitch}
-                        {allLights[i].name}
+<div class="container">
+    <div id="all">
+        <div>
+            {#each lights as light, i}
+                <div class="light">
+                    <div class="title">
+                        {#if !editLightSwitch}
+                            {allLights[i].name}
+                        {:else}
+                            <input type="text" bind:value={allLights[i].name} />
+                        {/if}
+                    </div>
+                    {#if editLightSwitch}
+                        <div
+                            on:click={() => {
+                                resetLight(allLights[i].id);
+                            }}
+                        >
+                            <i class="icon-x" />
+                        </div>
                     {:else}
-                        <input type="text" bind:value={allLights[i].name} />
+                        <div class="light_switch">
+                            <input
+                                type="checkbox"
+                                id="switch{i}"
+                                class="switch"
+                                bind:checked={allLights[i].work}
+                                on:change={() => {
+                                    onOffLight(
+                                        allLights[i].id,
+                                        allLights[i].work
+                                    );
+                                }}
+                            />
+                            <label for="switch{i}" class="lbl-off">Off</label>
+                            <label for="switch{i}" class="lbl-on">On</label>
+                        </div>
                     {/if}
                 </div>
-                {#if editLightSwitch}
-                    <div
-                        on:click={() => {
-                            resetLight(allLights[i].id);
-                        }}
-                    >
-                        <i class="icon-x" />
-                    </div>
-                {:else}
-                    <div class="light_switch">
-                        <input
-                            type="checkbox"
-                            id="switch{i}"
-                            class="switch"
-                            bind:checked={allLights[i].work}
-                            on:change={() => {
-                                onOffLight(allLights[i].id, allLights[i].work);
-                            }}
-                        />
-                        <label for="switch{i}" class="lbl-off">Off</label>
-                        <label for="switch{i}" class="lbl-on">On</label>
-                    </div>
-                {/if}
-            </div>
-        {/each}
+            {/each}
+        </div>
+        <div id="add">
+            {#if !editLightSwitch}
+                <div on:click={addLight}><i class="icon-plus" /></div>
+                <div
+                    class="edit"
+                    on:click={() => {
+                        editLightSwitch = !editLightSwitch;
+                    }}
+                >
+                    <i class="icon-edit" />
+                </div>
+            {:else}
+                <div
+                    class="edit"
+                    on:click={() => {
+                        editLightSwitch = !editLightSwitch;
+                        editLights();
+                    }}
+                >
+                    <i class="icon-v" />
+                </div>
+            {/if}
+        </div>
     </div>
-    <div id="add">
-        {#if !editLightSwitch}
-            <div on:click={addLight}><i class="icon-plus" /></div>
-            <div
-                class="edit"
-                on:click={() => {
-                    editLightSwitch = !editLightSwitch;
-                }}
-            >
-                <i class="icon-edit" />
-            </div>
-        {:else}
-            <div
-                class="edit"
-                on:click={() => {
-                    editLightSwitch = !editLightSwitch;
-                    editLights();
-                }}
-            >
-                <i class="icon-v" />
-            </div>
-        {/if}
-    </div>
+    <button class="reset-all" on:click={resetAll}>Zresetuj wszystkie</button>
 </div>
 
 <style lang="scss">
@@ -156,6 +167,23 @@
     $width: math.div(72, 16) * 1em;
 
     $transition-default: 0.25s ease-out 0.1s;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .reset-all {
+        border-radius: 10vmin;
+        border: none;
+        background: $p-color-dark;
+        color: white;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+    }
 
     #all {
         margin-top: 15vmin;

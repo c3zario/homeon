@@ -294,6 +294,14 @@ async function main() {
         });
     });
 
+    app.post("/api/reset-all", (req, res) => {
+        handleErrors(async () => {
+            io.send("RESET");
+            await database.groups.updateMany({}, { $set: { lights: [] } });
+            res.send();
+        });
+    });
+
     server.listen(process.env.PORT || 8080);
 
     async function register(req: any) {
