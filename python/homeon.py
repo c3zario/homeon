@@ -22,7 +22,7 @@ async def message(data):
 
 
 async def main():
-    await client.connect("https://homeon.azurewebsites.net/")
+    await client.connect("https://home-on.herokuapp.com/")
     print("Successfully connected to Home ON")
     await client.wait()
 
