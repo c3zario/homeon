@@ -1,4 +1,24 @@
 # Home ON
+## 🏠 HomeOn – Smart Home System
+
+A comprehensive smart home management system built with a 3-person team. The system combines custom-built hardware (eSwitch devices) with a mobile app to give users full control over their home from any device.
+
+**Key features:**
+- 💡 Remote control of lighting and devices via 433MHz radio signal
+- 📅 Daily schedule planning and task lists
+- 📍 Geolocation-based automation (auto turn off when leaving home)
+- 💬 Built-in group messenger
+- 📱 Available on Android (Google Play) and any browser
+
+> 🥉 3rd place · School Science Picnic 2022
+
+## Photos
+<img width="720" height="294" alt="image" src="https://github.com/user-attachments/assets/301dd6dd-c2ac-4298-aea9-c3e88eb6432d" />
+<img width="343" height="364" alt="image" src="https://github.com/user-attachments/assets/51f8b3a2-3271-45de-b4a3-30bb7d008a95" />
+<img width="181" height="386" alt="image" src="https://github.com/user-attachments/assets/6075f7fc-d93f-4d66-9459-40fba3f957e3" />
+<img width="145" height="309" alt="image" src="https://github.com/user-attachments/assets/5926ac77-e5d7-4d31-aa08-f936a432b071" />
+<img width="144" height="238" alt="image" src="https://github.com/user-attachments/assets/54035b07-77a3-4a7d-a790-f072910e3a35" />
+
 ## Setup
 1. `npm i`
 2. Create file .env with: `SESSION_SECRET=<secret>`, where `<secret>` is an unguessable secret string
