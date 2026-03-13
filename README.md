@@ -7,6 +7,7 @@ A comprehensive smart home management system built with a 3-person team. The sys
 - Remote control of lighting and devices via 433MHz radio signal
 - Daily schedule planning and task lists
 - Geolocation-based automation (auto turn off when leaving home)
+- Geolocate members of your group
 - Available on Android (Google Play) and any browser
 
 > 🥉 3rd place · School Science Picnic 2022
