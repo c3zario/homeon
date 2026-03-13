@@ -1,13 +1,13 @@
 # Home ON
-## 🏠 HomeOn – Smart Home System
+## Home ON – Smart Home System
 
 A comprehensive smart home management system built with a 3-person team. The system combines custom-built hardware (eSwitch devices) with a mobile app to give users full control over their home from any device.
 
 **Key features:**
-- 💡 Remote control of lighting and devices via 433MHz radio signal
-- 📅 Daily schedule planning and task lists
-- 📍 Geolocation-based automation (auto turn off when leaving home)
-- 📱 Available on Android (Google Play) and any browser
+- Remote control of lighting and devices via 433MHz radio signal
+- Daily schedule planning and task lists
+- Geolocation-based automation (auto turn off when leaving home)
+- Available on Android (Google Play) and any browser
 
 > 🥉 3rd place · School Science Picnic 2022
 
